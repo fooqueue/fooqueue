@@ -1,0 +1,58 @@
+name: 🐛 Bug Report
+description: Create a report to help improve Fooqueue
+title: 'bug: '
+
+body:
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: Please ensure you have completed all of the following.
+      options:
+        - label: I have read the [Contributing Guidelines](https://github.com/fooqueue/fooqueue/CONTRIBUTING.md).
+          required: true
+        - label: I agree to follow the [Code of Conduct](https://github.com/fooqueue/fooqueue/CODE_OF_CONDUCT.md).
+          required: true
+        - label: I have searched for [existing issues](https://github.com/fooqueue/fooqueue/issues) that already report this problem, without success.
+          required: true
+
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current Behavior
+      description: A clear description of what the bug is and how it manifests.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: A clear description of what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Please explain the steps required to duplicate this issue.
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: input
+    id: reproduction-url
+    attributes:
+      label: Code Reproduction URL
+      description: Please reproduce this issue in a blank SvelteKit application with Fooqueue installed and provide a link to the repo. Issues without a code reproduction may be closed if the issue you are reporting can't easily be reproduced.
+      placeholder: https://github.com/...
+
+  - type: textarea
+    id: additional-information
+    attributes:
+      label: Additional Information
+      description: List any other information that is relevant to your issue. Stack traces, related issues, suggestions on how to fix, Stack Overflow links, forum links, etc.

@@ -1,0 +1,50 @@
+services:
+  # A Node web service
+  - type: web
+    name: webdis
+    runtime: Node,
+    
+    repo: https://github.com/fooqueue/fooqueue.git # optional
+    region: oregon # optional (defaults to oregon)
+    plan: standard # optional (defaults to starter instance type)
+    branch: main # optional (defaults to master)
+    autoDeploy: false
+    envVars:
+      - key: QUEUE_NAME
+        value: fq:jobs
+      - key: FQ_ENDPOINT
+        sync: false
+      - key: FQ_API_KEY
+        generateValue: true
+      - key: FQ_PORT
+        value: 3000
+      - key: LOG_LEVEL
+        value: warn
+      - key: CACHE_PREFIX
+        value: fq:cache
+      - key: CACHE_EXPIRY_SECONDS
+        value: 86400
+      - key: HIGH_PRIORITY
+        value: 10
+      - key: DEFAULT_PRIORITY
+        value: 100
+      - key: LOW_PRIORITY
+        value: 1000
+      - key: KEEP_COMPLETE_AGE
+        value: 3600
+      - key: KEEP_FAIL_AGE
+        value: 86400
+      - key: KEEP_COMPLETE_COUNT
+        value: 25
+      - key: KEEP_FAIL_COUNT
+        value: 1000
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: queue
+          property: connectionString # available properties are listed below
+  - type: redis
+    name: queue
+    ipAllowList: [] # required
+    plan: free # optional (defaults to starter instance type)
+    maxmemoryPolicy: noeviction # optional (defaults to allkeys-lru)
