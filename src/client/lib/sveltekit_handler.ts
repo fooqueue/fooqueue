@@ -14,6 +14,7 @@ export default async function FooQueueSveltekitHandler (event: RequestEvent, res
     const result = await resolve(event);
     return result;
   } else {
-    return Response.json({error: "Incorrect API key"}, {status: 401});
+    const result = new Response(JSON.stringify({error: "Incorrect API key"}), {status: 401});
+    return result;
   }
 }
