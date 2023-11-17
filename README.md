@@ -42,9 +42,10 @@ export async function post(event: RequestEvent) {
 }
 ```
 
-Now let's add a quick handler near the top of `hooks.server.ts` to make sure all incoming requests to `/fooqueue/*` endpoints go directly to our routes. The third param activates development mode if true. Otherwise an API param would need to be set on our environment.
+Now let's add a quick handler near the top of `hooks.server.ts` to make sure all incoming requests to `/fooqueue/*` endpoints go directly to our routes. The third param activates development mode if true. Otherwise an fourth parameter `FQ_API_KEY` would be required.
 
 ```ts
+import { NODE_ENV } from "$env/static/private";
 import { FooqueueSveltekitHandler } from "fooqueue";
 export async function handle<Handle>({ event, resolve }) {
   if (event.url.pathname.startsWith("/fooqueue")) {
@@ -58,17 +59,28 @@ export async function handle<Handle>({ event, resolve }) {
 }
 ```
 
-In production `FooqueueSveltekitHandler` will also require a fourth param, `FQ_API_KEY`, which must match the the `FQ_API_KEY` environment variable on your Fooqueue server (in order to protect your `/fooqueue/*` routes). But for now, so long as `NODE_ENV==="development"`, you can safely ignore this.
+Now we need to create the our client to help us post to the queue. Create it in your `$lib/server` folder so it's easy to import, but can never end up on the client.
 
-Okay! You can now create enqueued jobs, using the Fooqueue client library. It's as simple as importing and using it anywhere on the server side.
+`./src/$lib/server/fooqueue.ts`
+
+```ts
+import { CreateQueue } from "fooqueue";
+import { NODE_ENV } from "$env/static/private";
+
+export default CreateQueue({
+  devMode: NODE_ENV === "development",
+});
+```
+
+Okay! You can now create enqueued jobs, using the client you just created. It's as simple as importing and using it anywhere on the server side.
 
 ./src/routes/import_csv/+server.ts
 
 ```ts
-import enqueue from "fooqueue";
+import queue from "$lib/server/fooqueue";
 
 export async function load(event) {
-  const fooqueue_job_id = await enqueue("/fooqueue/my_route_name", {
+  const fooqueue_job_id = await queue("/fooqueue/my_route_name", {
     hello: "world",
   });
   return {

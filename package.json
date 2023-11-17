@@ -1,6 +1,6 @@
 {
   "name": "fooqueue",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Job queue for serverless Typescript apps",
   "source": "src/index.ts",
   "main": "lib/index.js",
