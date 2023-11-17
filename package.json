@@ -1,6 +1,6 @@
 {
   "name": "fooqueue",
-  "version": "0.1.8",
+  "version": "0.1.10",
   "description": "Job queue for serverless Typescript apps",
   "source": "src/index.ts",
   "main": "lib/index.js",
@@ -12,7 +12,7 @@
     "lint": "eslint . --ext .ts",
     "test": "jest --config jestconfig.json",
     "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run lint",
+    "prepublishOnly": "npm run build && npm test && npm run lint",
     "preversion": "npm run lint",
     "version": "git add -A src",
     "postversion": "git push && git push --tags",
