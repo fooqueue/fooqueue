@@ -6,6 +6,6 @@ export default function (API_KEY: string, DEV_MODE: boolean) {
       return next(new Error('Invalid API key provided!'));
     }
     return next();
-  }
+  };
 }
 

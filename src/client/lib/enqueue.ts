@@ -6,11 +6,11 @@ import type {EnqueueOptions} from '../types/EnqueueOptions';
  * @param {any} data The data that will be posted to {endpoint}
  * @param {EnqueueOptions} options Optional configuration information
  */
-export default async function (endpoint: string, data: any, options: EnqueueOptions = {}) {
-  let API_KEY: string = options.api_key || env.FQ_API_KEY || "UNSAFE_DO_NOT_USE_IN_PRODUCTION";
+export default async function (endpoint: string, data: unknown, options: EnqueueOptions = {}) {
+  const API_KEY: string = options.api_key || env.FQ_API_KEY || "UNSAFE_DO_NOT_USE_IN_PRODUCTION";
   if(API_KEY === 'UNSAFE_DO_NOT_USE_IN_PRODUCTION' && env.NODE_ENV !== 'development') throw new Error("Environment variable FQ_API_KEY must be set or api_key must be passed to options");
 
-  let FQ_ENDPOINT: string = options.fq_endpoint || env.FQ_ENDPOINT || 'http://localhost:9181';
+  const FQ_ENDPOINT: string = options.fq_endpoint || env.FQ_ENDPOINT || 'http://localhost:9181';
   if(FQ_ENDPOINT === 'http://localhost:9181' && env.NODE_ENV !== 'development') console.warn(`The Fooqueue server URL is set to ${FQ_ENDPOINT}, even though NODE_ENV is not "development". If you are running in a production environment, you may not be able to make requests to a local network`);
 
   const base_url = new URL(FQ_ENDPOINT+endpoint);

@@ -4,7 +4,7 @@ import {type CacheInterface} from '../utils/cache';
 type Body = {
   status?: string | null,
   progress?: number | null,
-  data?: Object | null
+  data?: unknown | null
 }
 
 function validate_body(body: Body): Body {
@@ -27,10 +27,10 @@ function validate_body(body: Body): Body {
       JSON.stringify(body.data);
       data = body.data;
     } catch (err) {
-
+      data = {};
     }
   }
-  return {status, progress, data}
+  return {status, progress, data};
 }
 
 function merge_status(original_status: Body, new_status: Body): Body {
@@ -38,7 +38,7 @@ function merge_status(original_status: Body, new_status: Body): Body {
     status: new_status.status || original_status.status,
     progress: new_status.progress || original_status.progress,
     data: new_status.data || original_status.data
-  }
+  };
 }
 
 export default function (cache: CacheInterface) {
@@ -47,7 +47,7 @@ export default function (cache: CacheInterface) {
       const body = validate_body(req.body);
       const uuid = req.params.uuid;
       
-      const status = await cache.get(uuid)
+      const status = await cache.get(uuid);
       if(!status) return;
       const new_status = merge_status(status, body);
       await cache.set(uuid, new_status);
@@ -55,5 +55,5 @@ export default function (cache: CacheInterface) {
     } catch (err) {
       return next(err);
     }
-  }
+  };
 }

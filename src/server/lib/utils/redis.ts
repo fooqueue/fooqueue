@@ -6,8 +6,8 @@ export default function (REDIS_URL: string, log: LogInterface) {
   const client = new Redis(REDIS_URL, {
     maxRetriesPerRequest: 0
   });
-  client.on('connecting', () => log.info('Connecting to Redis'))
-  client.on('connect', () => log.info('Connected to Redis'))
-  client.on('ready', () => log.info('Redis ready'))
+  client.on('connecting', () => log.info('Connecting to Redis'));
+  client.on('connect', () => log.info('Connected to Redis'));
+  client.on('ready', () => log.info('Redis ready'));
   return client;
 }

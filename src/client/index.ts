@@ -1,5 +1,9 @@
 
 
-export {default as default} from './lib/enqueue';
-export {default as FooQueueSveltekitHandler} from './lib/sveltekit_handler';
-export {type EnqueueOptions as EnqueueOptions} from './types/EnqueueOptions';
+import enqueue from './lib/enqueue';
+import { FooqueueSveltekitHandler as FQSKH } from './lib/sveltekit_handler';
+import {type EnqueueOptions} from './types/EnqueueOptions';
+
+export {FQSKH};
+export {type EnqueueOptions};
+export default enqueue;

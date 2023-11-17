@@ -7,21 +7,21 @@ export type CacheConfig = {
 }
 
 export type CacheInterface = {
-  set: (key: string, data: any, ttl?: number) => Promise<void>,
-  get: (key: string) => Promise<any>,
+  set: (key: string, data: unknown, ttl?: number) => Promise<void>,
+  get: (key: string) => Promise<unknown>,
   del: (key: string) => Promise<void>,
 }
 
 export default function (redis: Redis, log: LogInterface, config: CacheConfig) {
 
   return {
-    set: async (key: string, data: any, ttl: number = config.CACHE_EXPIRY_SECONDS): Promise<void> => {
+    set: async (key: string, data: unknown, ttl: number = config.CACHE_EXPIRY_SECONDS): Promise<void> => {
       await redis.set(config.CACHE_PREFIX+':'+key, JSON.stringify(data));
       await redis.expire(config.CACHE_PREFIX+':'+key, ttl);
       log.info(`Set ${key} in cache. Set to expire in ${ttl} seconds`);
     },
-    get: async (key: string): Promise<any> => {
-      const value = await redis.get(config.CACHE_PREFIX+':'+key)
+    get: async (key: string): Promise<unknown> => {
+      const value = await redis.get(config.CACHE_PREFIX+':'+key);
       if(!value) throw new Error('Value at '+key+' was null');
       log.info(`Got ${key} in cache`);
       return JSON.parse(value);
@@ -30,8 +30,5 @@ export default function (redis: Redis, log: LogInterface, config: CacheConfig) {
       await redis.del(config.CACHE_PREFIX+':'+key);
       log.info(`Deleted ${key} in cache`);
     }
-    
-
-  }
-
+  };
 }

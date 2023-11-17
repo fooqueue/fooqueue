@@ -1,5 +1,5 @@
 import express, { Application } from "express";
-import type {Request, Response, NextFunction} from 'express';
+import type {Request, Response} from 'express';
 
 import auth from './lib/handlers/auth';
 import put_status from './lib/handlers/put_status';
@@ -7,7 +7,6 @@ import get_status from './lib/handlers/get_status';
 import post_job from './lib/handlers/post_job';
 
 import worker from './lib/worker';
-import { randomUUID } from "crypto";
 
 import RedisClient from "./lib/utils/redis";
 import Cache from './lib/utils/cache';
@@ -15,18 +14,18 @@ import Log from './lib/utils/log';
 import Queue from "./lib/utils/queue";
 
 export default function (
-  API_KEY: string = 'UNSAFE_DO_NOT_USE_IN_PRODUCTION',
-  ENDPOINT: string = 'http://localhost:3000',
-  QUEUE_NAME: string = 'fq:jobs',
-  PORT: number = 3003,
-  REDIS_URL: string = 'redis://localhost:6379',
-  CACHE_PREFIX: string = 'fq:cache',
-  CACHE_EXPIRY_SECONDS: number = 3600 * 24,
-  LOW_PRIORITY: number = 1000,
-  DEFAULT_PRIORITY: number = 1000,
-  HIGH_PRIORITY: number = 10,
-  LOG_LEVEL: "info" | "debug" | "warn" | "error" = "info",
-  DEV_MODE: boolean =  false
+  API_KEY = 'UNSAFE_DO_NOT_USE_IN_PRODUCTION',
+  ENDPOINT = 'http://localhost:3000',
+  QUEUE_NAME = 'fq:jobs',
+  PORT = 3003,
+  REDIS_URL = 'redis://localhost:6379',
+  CACHE_PREFIX = 'fq:cache',
+  CACHE_EXPIRY_SECONDS = 3600 * 24,
+  LOW_PRIORITY = 1000,
+  DEFAULT_PRIORITY = 1000,
+  HIGH_PRIORITY = 10,
+  LOG_LEVEL = 'info',
+  DEV_MODE =  false
 ) {
 
   
@@ -36,7 +35,7 @@ export default function (
   const cache = Cache(redis, log, {
     CACHE_EXPIRY_SECONDS: CACHE_EXPIRY_SECONDS,
     CACHE_PREFIX: CACHE_PREFIX
-  })
+  });
   const queue = Queue(QUEUE_NAME, log, redis);
   const app: Application = express();
 
@@ -52,23 +51,23 @@ export default function (
     LOW_PRIORITY, DEFAULT_PRIORITY, HIGH_PRIORITY
   }))
   .put('/job/:uuid/status', express.json(), put_status(cache))
-  .all('*', (req, res, next) => {
+  .all('*', (req, res) => {
     return res.status(404).json({error: "Not found"});
   })
-  .use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  .use((err: Error, req: Request, res: Response) => {
     log.error(err.stack || 'Unknown error');
-    res.status(500).json({error: err.message})
+    res.status(500).json({error: err.message});
   })
   .listen(PORT, "localhost", async function () {
     await new Promise(r => setTimeout(r, 1000)); //get redis time to connect
     log.info(`Server is running on port ${PORT}.`);
     worker(QUEUE_NAME, ENDPOINT, API_KEY, redis, cache, log);
   })
-  .on("error", (err: any) => {
-    if (err.code === "EADDRINUSE") {
+  .on("error", (err: {code?: string, message?: string}) => {
+    if (err.code && err.code === "EADDRINUSE") {
       log.error("Error: address already in use");
     } else {
-      log.error(err);
+      log.error(err.message || "Unknonw error");
     }
   });
 

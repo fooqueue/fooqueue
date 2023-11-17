@@ -2,10 +2,14 @@
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const argv = yargs(hideBin(process.argv)).argv
-const app = require("./lib/server/index.js");
+const app = require("./lib/server/server.js");
 
 //TODO: Set environment varibles.
 const env = require('node:process').env;
+
+console.log(argv.development)
+console.log(argv.dev)
+console.log(env.NODE_ENV)
 
 app.default(
   argv.apiKey || argv.key || argv.api || env.FQ_API_KEY,
@@ -21,3 +25,4 @@ app.default(
   argv.logLevel || argv.l || env.LOG_LEVEL,
   argv.development || argv.dev || env.NODE_ENV === "development" || false
 );
+

@@ -8,7 +8,7 @@ type ResolveHandler = (request: RequestEvent, options?: undefined) => MaybePromi
  * @param {ResolveHandler} resolve The Sveltekit hooks.server.ts resolve event
  */
 import {env} from 'node:process';
-export default async function FooQueueSveltekitHandler (event: RequestEvent, resolve: ResolveHandler, FQ_API_KEY: string = 'UNSAFE_DO_NOT_USE_IN_PRODUCTION'): Promise<Response> {
+export async function FooqueueSveltekitHandler (event: RequestEvent, resolve: ResolveHandler, FQ_API_KEY = 'UNSAFE_DO_NOT_USE_IN_PRODUCTION'): Promise<Response> {
   if(env.NODE_ENV !== 'development' && FQ_API_KEY === 'UNSAFE_DO_NOT_USE_IN_PRODUCTION') throw new Error('Unsafe: NODE_ENV is not set to development, and you are using the default API key');
   if(event.request.headers.get('x-fq-api-key') === FQ_API_KEY) {
     const result = await resolve(event);

@@ -5,7 +5,7 @@ export type LogInterface = {
   error: (message: string) => void,
 }
 
-export default function (LOG_LEVEL: 'info' | 'debug' | 'warn' | 'error') {
+export default function (LOG_LEVEL: string) {
   return  {
     info: (message: string) => {
       if(LOG_LEVEL === 'info' || LOG_LEVEL === 'warn' || LOG_LEVEL === 'debug' || LOG_LEVEL === 'error') console.info(`INFO: ${message}`);
@@ -18,6 +18,6 @@ export default function (LOG_LEVEL: 'info' | 'debug' | 'warn' | 'error') {
     },
     error: (message: string) => {
       if(LOG_LEVEL === 'error') console.error(`ERROR: ${message}`);
-  }
-  }
+    }
+  };
 }

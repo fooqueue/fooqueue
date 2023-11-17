@@ -11,7 +11,7 @@ const KEEP_COMPLETE_COUNT: number = Number(env.KEEP_COMPLETE_COUNT) || 25;
 const KEEP_FAIL_COUNT: number = Number(env.KEEP_FAIL_COUNT) || 100;
 
 export default async function (QUEUE_NAME: string, ENDPOINT: string, API_KEY: string, redis: RedisClient, cache: CacheInterface, log: LogInterface): Promise<Worker> {
-  log.info(`Creating worker for queue ${QUEUE_NAME}`)
+  log.info(`Creating worker for queue ${QUEUE_NAME}`);
   const worker = new Worker(QUEUE_NAME, async (job: Job) => {
     const id = job.name;
     const action = job.data.action;
@@ -33,7 +33,7 @@ export default async function (QUEUE_NAME: string, ENDPOINT: string, API_KEY: st
     });
     if(!response.ok) {
       try {
-        const error = await response.json()
+        const error = await response.json();
         await cache.set(id, {status: 'failed', outcome: {status: response.status, error: error}});
       } catch (err) {
         await cache.set(id, {status: 'failed', outcome: {error: `Handler returned an unknown error with status ${response.status}`}});
@@ -42,7 +42,7 @@ export default async function (QUEUE_NAME: string, ENDPOINT: string, API_KEY: st
     }
     const result = await response.json();
     await cache.set(id, {status: 'complete', outcome: result});
-    log.info(`Completed job with id ${id}`)
+    log.info(`Completed job with id ${id}`);
     
   }, {
     connection: redis, 
@@ -56,7 +56,7 @@ export default async function (QUEUE_NAME: string, ENDPOINT: string, API_KEY: st
       age: KEEP_FAIL_AGE
     }
   });
-  log.debug(`Started worker`)
+  log.debug(`Started worker`);
   return worker;
 }
 
