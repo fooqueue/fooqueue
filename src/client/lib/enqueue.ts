@@ -26,7 +26,7 @@ export function CreateQueue (createQueueOptions: CreateEnqueueOptions = {
     if(!createQueueOptions.apiKey) throw new Error("Some API key must always be set");
     if(!createQueueOptions.endpoint) throw new Error("Some Fooqueue server URL must always be set");
 
-    const base_url = new URL(createQueueOptions.endpoint+route);
+    const base_url = new URL(createQueueOptions.endpoint+'/job');
     const url = new URL(base_url.toString().replace(/([^:]\/)\/+/g, "$1"));
     // set the options which are read by the server
     if(options.priority) url.searchParams.append('priority', options.priority.toString());
@@ -36,11 +36,15 @@ export function CreateQueue (createQueueOptions: CreateEnqueueOptions = {
     if(options.repeat?.every) url.searchParams.append('every', options.repeat.every?.toString());
     if(options.repeat?.limit) url.searchParams.append('limit', options.repeat.limit?.toString());
 
+
+    const body = JSON.stringify({action: route, data: data});
+    const send_to_url = url.toString();
+
     const response = await fetch(url.toString(), {
       method: 'post',
       headers: {
         'content-type': 'application/json',
-        'x-fqapi-key': createQueueOptions.apiKey
+        'x-fqapi-key': options.api_key || createQueueOptions.apiKey
       },
       body: JSON.stringify({
           action: route,
