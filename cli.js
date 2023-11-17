@@ -23,6 +23,6 @@ app.default(
   argv.defaultPriority || argv.dp || env.DEFAULT_PRIORITY,
   argv.highPriority || argv.hp || env.HIGH_PRIORITY,
   argv.logLevel || argv.l || env.LOG_LEVEL,
-  argv.development || argv.dev || env.NODE_ENV === "development" || false
+  argv.development || argv.dev || env.NODE_ENV === "development" || true
 );
 

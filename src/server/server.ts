@@ -43,6 +43,7 @@ export default function (
     throw new Error("API key has not been changed from unsafe default. This only works when NODE_ENV=development or when the cli is invoked with the --dev flag");
   }
   if(API_KEY === 'UNSAFE_DO_NOT_USE_IN_PRODUCTION') log.warn('Using development API key: Unsafe for any prodution environment');
+  if(DEV_MODE) log.warn('Launching in developer mode. If you see this warning in production, you are doing something wrong.');
 
   app
   .get('/job/:uuid/status', get_status(cache)) //unprotected route

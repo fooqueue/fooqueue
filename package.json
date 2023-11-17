@@ -1,6 +1,6 @@
 {
   "name": "fooqueue",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Job queue for serverless Typescript apps",
   "main": "lib/client/index.js",
   "bin": "cli.js",
