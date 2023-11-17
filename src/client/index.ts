@@ -1,9 +1,7 @@
 
 
-import enqueue from './lib/enqueue';
-import { FooqueueSveltekitHandler as FQSKH } from './lib/sveltekit_handler';
-import {type EnqueueOptions} from './types/EnqueueOptions';
-
-export {FQSKH};
-export {type EnqueueOptions};
-export default enqueue;
+import fooqueue from './lib/enqueue';
+const default_object = Object.assign({}, fooqueue);
+export default default_object;
+export * from './lib/sveltekit_handler';
+export * from './types/EnqueueOptions';
