@@ -7,10 +7,6 @@ const app = require("./lib/server/server.js");
 //TODO: Set environment varibles.
 const env = require('node:process').env;
 
-console.log(argv.development)
-console.log(argv.dev)
-console.log(env.NODE_ENV)
-
 app.default(
   argv.apiKey || argv.key || argv.api || env.FQ_API_KEY,
   argv.endpoint || argv.e || env.FQ_ENDPOINT,

@@ -6,7 +6,7 @@ import type {EnqueueOptions} from '../types/EnqueueOptions';
  * @param {any} data The data that will be posted to {endpoint}
  * @param {EnqueueOptions} options Optional configuration information
  */
-export default async function (endpoint: string, data: unknown, options: EnqueueOptions = {}) {
+export default async function (endpoint: string, data: unknown, options: EnqueueOptions = {}): Promise<string> {
   const API_KEY: string = options.api_key || env.FQ_API_KEY || "UNSAFE_DO_NOT_USE_IN_PRODUCTION";
   if(API_KEY === 'UNSAFE_DO_NOT_USE_IN_PRODUCTION' && env.NODE_ENV !== 'development') throw new Error("Environment variable FQ_API_KEY must be set or api_key must be passed to options");
 
