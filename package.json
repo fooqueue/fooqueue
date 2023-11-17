@@ -1,6 +1,6 @@
 {
   "name": "fooqueue",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Job queue for serverless Typescript apps",
   "source": "src/index.ts",
   "main": "lib/index.js",
@@ -8,7 +8,10 @@
   "module": "lib/module.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "parcel build",
+    "build": "rm -rf ./lib && parcel build && tsc",
+    "build:client": "parcel build",
+    "build:server": "tsc",
+    "dev": "parcel watch",
     "lint": "eslint . --ext .ts",
     "test": "jest --config jestconfig.json",
     "prepare": "npm run build",

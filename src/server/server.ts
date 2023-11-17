@@ -15,7 +15,7 @@ import Queue from "./lib/utils/queue";
 
 export default function (
   API_KEY = 'UNSAFE_DO_NOT_USE_IN_PRODUCTION',
-  ENDPOINT = 'http://localhost:3000',
+  ENDPOINT = 'http://localhost:5173',
   QUEUE_NAME = 'fq:jobs',
   PORT = 3003,
   REDIS_URL = 'redis://localhost:6379',
@@ -46,6 +46,12 @@ export default function (
   if(DEV_MODE) log.warn('Launching in developer mode. If you see this warning in production, you are doing something wrong.');
 
   app
+  .use(express.json(), (req, res, next) => {
+    console.log('first_request')
+    console.log(req.url);
+    console.log(req.body);
+    return next();
+  })
   .get('/job/:uuid/status', get_status(cache)) //unprotected route
   .use(auth(API_KEY, DEV_MODE)) //protect all following routes
   .post('/job', express.json(), post_job(queue, cache, log, {

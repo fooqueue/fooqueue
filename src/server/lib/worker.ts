@@ -20,6 +20,8 @@ export default async function (QUEUE_NAME: string, ENDPOINT: string, API_KEY: st
     log.info(`Incoming job with id ${id}`);
   
     await cache.set(id, {status: 'processing'});
+
+    console.log(ENDPOINT + action, API_KEY, id, data);
   
     const response = await fetch(ENDPOINT + action, {
       method: 'post',

@@ -42,14 +42,14 @@ function build_options(query: Request["query"], uuid: string, config: PostJobCon
   if(query.cron && typeof query.cron === 'string') {
     if(cron_validation_regexp.test(query.cron)) options.repeat = { pattern: query.cron };
   }
-  if(isNaN(Number(query.every))) {
+  if(!isNaN(Number(query.every))) {
     if(!options.repeat) {
       options.repeat = {every: Number(query.every)};
     } else {
       options.repeat.every = Number(query.every);
     }
   }
-  if(isNaN(Number(query.limit))) {
+  if(!isNaN(Number(query.limit))) {
     if(!options.repeat) {
       options.repeat = {limit: Number(query.limit)};
     } else {
@@ -91,6 +91,8 @@ export default function (queue: Queue, cache: CacheInterface, log: LogInterface,
       const uuid = randomUUID();
 
       const options = build_options(req.query, uuid, config);
+
+      console.log(options);
     
       await queue.add(uuid, body, options);
       log.debug(`Added item to ${queue.name} queue with ID ${uuid}`);
@@ -107,6 +109,6 @@ export default function (queue: Queue, cache: CacheInterface, log: LogInterface,
     }
   
   
-  };
+  }
 }
 
