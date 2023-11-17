@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "types": ["node"],
         "esModuleInterop": true,
         "outDir": "./lib",
         "module": "commonjs",

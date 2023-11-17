@@ -4,4 +4,4 @@ export type {EnqueueOptions} from './client/types/EnqueueOptions';
 
 export default {
   enqueue, FooqueueSveltekitHandler
-}
+};
