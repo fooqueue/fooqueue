@@ -42,11 +42,13 @@ export default function (
   const app: Application = express();
 
   if(DEV_MODE) {
-    console.log(`✅ Launching Fooqueue Server in development mode with the following variables: 
+    console.log(`✅ Launching Fooqueue Server in DEVELOPMENT mode for app located at ${ENDPOINT}, with the following variables: 
     FQ_API_KEY=${API_KEY}
     FQ_SERVER_ENDPOINT=http://localhost:${PORT}
     `);
     console.log(`❗️ If you see this message in production you're doing something wrong. Please check the documentation. ❗️`);
+  } else {
+    console.log(`✅ Launching Fooqueue Server in PRODUCTION mode for app located at ${ENDPOINT}`);
   }
 
   app

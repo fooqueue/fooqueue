@@ -5,7 +5,7 @@ import {env} from 'node:process';
 
 app(
   env.FQ_API_KEY || null, 
-  env.FQ_ENDPOINT,
+  env.FQ_APP_ENDPOINT,
   env.QUEUE_NAME,
   Number(env.FQ_PORT),
   env.FQ_REDIS_URL || env.REDIS_URL,
