@@ -14,7 +14,7 @@ export default async function (QUEUE_NAME: string, ENDPOINT: string, API_KEY: st
   log.info(`Creating worker for queue ${QUEUE_NAME}`);
   const worker = new Worker(QUEUE_NAME, async (job: Job) => {
     const id = job.name;
-    const action = job.data.action;
+    const action = job.data.action[0] === '/' ? job.data.action : `/${job.data.action}`;
     const data = job.data.data;
 
     log.info(`Incoming job with id ${id}`);

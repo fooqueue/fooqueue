@@ -8,16 +8,16 @@ export type LogInterface = {
 export default function (LOG_LEVEL: string) {
   return  {
     info: (message: string) => {
-      if(LOG_LEVEL === 'info' || LOG_LEVEL === 'warn' || LOG_LEVEL === 'debug' || LOG_LEVEL === 'error') console.info(`INFO: ${message}`);
+      if(LOG_LEVEL === 'info') console.info(`INFO: ${message}`);
     },
     debug: (message: string) => {
-      if(LOG_LEVEL === 'debug' || LOG_LEVEL === 'warn' || LOG_LEVEL === 'error' ) console.debug(`DEBUG: ${message}`);
+      if(LOG_LEVEL === 'info' || LOG_LEVEL === 'debug') console.debug(`DEBUG: ${message}`);
     },
     warn: (message: string) => {
-      if(LOG_LEVEL === 'warn' || LOG_LEVEL === 'error' ) console.warn(`WARN: ${message}`);
+      if(LOG_LEVEL === 'info' || LOG_LEVEL === 'debug' || LOG_LEVEL === 'warn') console.warn(`WARN: ${message}`);
     },
     error: (message: string) => {
-      if(LOG_LEVEL === 'error') console.error(`ERROR: ${message}`);
+      if(LOG_LEVEL === 'info' || LOG_LEVEL === 'debug' || LOG_LEVEL === 'warn' || LOG_LEVEL === 'error') console.error(`ERROR: ${message}`);
     }
   };
 }

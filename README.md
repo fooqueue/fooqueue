@@ -24,36 +24,56 @@ Install Fooqueue in your SvelteKit app's folder and start the development server
 
 ```bash
 npm install fooqueue
-npx fooqueue --dev
+npx fooqueue
 ```
 
-Create a new route that contains the work you want to enqueue. Fooqueue will call this route. It's best to keep these all in a dedicated folder, so that you easily protect the routes so that only your Fooqueue server can invoke them.
+Fooqueue Server should start in development mode and output an FQ_SERVER_URL and FQ_API_KEY to the console.
 
-./src/routes/fooqueue/my_route_name
+Copy and paste these to your `.env` file (or wherever you set environment variables in your develpoment environment).
+
+`.env`
+
+```txt
+FQ_SERVER_URL=http://localhost:9181
+FQ_API_KEY=<UUID>
+```
+
+The `FQ_SERVER_URL` will report the correct port, but it will always assume that it is running at `http://localhost:<PORT>`. If you wish to access it via a different URL you will need to configure it manually.
+
+Now, create a new route that contains the work you want to enqueue. You'll create a route like this for every different type of job you want to enqueue, so it's best to keep them together (eg: in a `/fooqueue/*` folder) to protect them from being invoked by anything other than Fooqueue Server.
+
+`./src/routes/fooqueue/my_route_name`
 
 ```ts
 export async function post(event: RequestEvent) {
   const { id, data } = await event.request.json();
   console.log(id, data);
-  //do something...
+  // do something...
   return {
     status: 200,
   };
+  // no need to return any body or statusText
 }
 ```
 
-Now let's add a quick handler near the top of `hooks.server.ts` to make sure all incoming requests to `/fooqueue/*` endpoints go directly to our routes. The third param activates development mode if true. Otherwise an fourth parameter `FQ_API_KEY` would be required.
+Now let's add a quick handler near the top of `hooks.server.ts` to make sure all incoming requests to `/fooqueue/*` endpoints go directly to our routes. We'll also check the api key in the `fq-api-key` to make sure it matches the `FQ_API_KEY` environment variable.
+
+`hooks.server.ts`
 
 ```ts
-import { NODE_ENV } from "$env/static/private";
-import { FooqueueSveltekitHandler } from "fooqueue";
+import { FQ_API_KEY } from "$env/static/private";
 export async function handle<Handle>({ event, resolve }) {
   if (event.url.pathname.startsWith("/fooqueue")) {
-    return await FooqueueSveltekitHandler(
-      event,
-      resolve,
-      NODE_ENV === "development"
-    );
+    if (FQ_API_KEY === event.request.headers.get("x-fq-api-key")) {
+      const result = await resolve(event);
+      return result;
+    } else {
+      const result = new Response(
+        JSON.stringify({ error: "Incorrect API key" }),
+        { status: 401 }
+      );
+      return result;
+    }
   }
   //the rest of your hook...
 }
@@ -61,15 +81,16 @@ export async function handle<Handle>({ event, resolve }) {
 
 Now we need to create the our client to help us post to the queue. Create it in your `$lib/server` folder so it's easy to import, but can never end up on the client.
 
-`./src/$lib/server/fooqueue.ts`
+`./src/$lib/server/queue.ts`
 
 ```ts
-import { CreateQueue } from "fooqueue";
-import { NODE_ENV } from "$env/static/private";
-
-export default CreateQueue({
-  devMode: NODE_ENV === "development",
+import { FQ_SERVER_ENDPOINT, FQ_API_KEY } from "$env/static/private";
+import Fooqueue from "fooqueue";
+const queue = Fooqueue({
+  endpoint: FQ_SERVER_ENDPOINT,
+  apiKey: FQ_API_KEY,
 });
+export default queue;
 ```
 
 Okay! You can now create enqueued jobs, using the client you just created. It's as simple as importing and using it anywhere on the server side.
@@ -77,7 +98,7 @@ Okay! You can now create enqueued jobs, using the client you just created. It's 
 ./src/routes/import_csv/+server.ts
 
 ```ts
-import queue from "$lib/server/fooqueue";
+import queue from "$lib/server/queue";
 
 export async function load(event) {
   const fooqueue_job_id = await queue("/fooqueue/my_route_name", {
@@ -89,7 +110,7 @@ export async function load(event) {
 }
 ```
 
-And that's it!
+And that's it! Restart your Sveltekit app to make sure all the environment variables are properly injected, and invoke the route to enqueue your first job!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

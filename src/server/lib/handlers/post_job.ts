@@ -109,6 +109,6 @@ export default function (queue: Queue, cache: CacheInterface, log: LogInterface,
     }
   
   
-  }
+  };
 }
 

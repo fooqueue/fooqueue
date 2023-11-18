@@ -14,21 +14,23 @@ import Log from './lib/utils/log';
 import Queue from "./lib/utils/queue";
 
 export default function (
-  API_KEY = 'UNSAFE_DO_NOT_USE_IN_PRODUCTION',
+  API_KEY: string | null,
   ENDPOINT = 'http://localhost:5173',
   QUEUE_NAME = 'fq:jobs',
-  PORT = 3003,
+  PORT = 9181,
   REDIS_URL = 'redis://localhost:6379',
   CACHE_PREFIX = 'fq:cache',
   CACHE_EXPIRY_SECONDS = 3600 * 24,
   LOW_PRIORITY = 1000,
-  DEFAULT_PRIORITY = 1000,
+  DEFAULT_PRIORITY = 100,
   HIGH_PRIORITY = 10,
   LOG_LEVEL = 'info',
   DEV_MODE =  false
 ) {
 
-  
+  if(ENDPOINT[ENDPOINT.length - 1] === '/') ENDPOINT = ENDPOINT.slice(0, -1); //don't accept trailing slash on endpoint;
+
+  if(!API_KEY) throw new Error("Invalid API key provided");
 
   const log = Log(LOG_LEVEL);
   const redis = RedisClient(REDIS_URL, log);
@@ -39,21 +41,20 @@ export default function (
   const queue = Queue(QUEUE_NAME, log, redis);
   const app: Application = express();
 
-  if(API_KEY === 'UNSAFE_DO_NOT_USE_IN_PRODUCTION' && DEV_MODE !== true) {
-    throw new Error("API key has not been changed from unsafe default. This only works when NODE_ENV=development or when the cli is invoked with the --dev flag");
+  if(DEV_MODE) {
+    console.log(`✅ Launching Fooqueue Server in development mode with the following variables: 
+    FQ_API_KEY=${API_KEY}
+    FQ_SERVER_ENDPOINT=http://localhost:${PORT}
+    `);
+    console.log(`❗️ If you see this message in production you're doing something wrong. Please check the documentation. ❗️`);
   }
-  if(API_KEY === 'UNSAFE_DO_NOT_USE_IN_PRODUCTION') log.warn('Using development API key: Unsafe for any prodution environment');
-  if(DEV_MODE) log.warn('Launching in developer mode. If you see this warning in production, you are doing something wrong.');
 
   app
   .use(express.json(), (req, res, next) => {
-    console.log('first_request')
-    console.log(req.url);
-    console.log(req.body);
     return next();
   })
   .get('/job/:uuid/status', get_status(cache)) //unprotected route
-  .use(auth(API_KEY, DEV_MODE)) //protect all following routes
+  .use(auth(API_KEY)) //protect all following routes
   .post('/job', express.json(), post_job(queue, cache, log, {
     LOW_PRIORITY, DEFAULT_PRIORITY, HIGH_PRIORITY
   }))
@@ -67,7 +68,7 @@ export default function (
   })
   .listen(PORT, "localhost", async function () {
     await new Promise(r => setTimeout(r, 1000)); //get redis time to connect
-    log.info(`Server is running on port ${PORT}.`);
+    log.debug(`Server is running on port ${PORT}.`);
     worker(QUEUE_NAME, ENDPOINT, API_KEY, redis, cache, log);
   })
   .on("error", (err: {code?: string, message?: string}) => {

@@ -4,7 +4,7 @@ import app from './server';
 import {env} from 'node:process';
 
 app(
-  env.FQ_API_KEY,
+  env.FQ_API_KEY || null, 
   env.FQ_ENDPOINT,
   env.QUEUE_NAME,
   Number(env.FQ_PORT),
