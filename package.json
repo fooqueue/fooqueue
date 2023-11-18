@@ -8,7 +8,7 @@
   "module": "lib/module.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "rm -rf ./lib && parcel build && tsc",
+    "build": "rm -rf ./lib && npm run build:server && npm run build:client",
     "build:client": "parcel build",
     "build:server": "tsc",
     "dev": "parcel watch",
