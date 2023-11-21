@@ -10,14 +10,14 @@ type CreateEnqueueOptions = {
  * @param {CreateEnqueueOptions} options Optional configuration information. Either devMode must be set to true or apiKey and endpoint must be configured.
  */
 export default function (createQueueOptions: CreateEnqueueOptions)
-: (endpoint: string, data: unknown, options: EnqueueOptions) => Promise<string> {
+: (endpoint: string, data: unknown, options: EnqueueOptions | undefined) => Promise<string> {
   if(!createQueueOptions.apiKey) throw new Error("API key must be set");
   if(!createQueueOptions.endpoint) console.warn("Fooqueue Server endpoint must be set");
   
   /**
   * @param {string} route The relative route in your application that Fooqueue will handle the enqueued job. This must accept POST requests. 
   * @param {any} data The data that will be posted to {endpoint}
-  * @param {EnqueueOptions} options Optional configuration information
+  * @param {EnqueueOptions | undefined} options Optional configuration information
   */
   return async function (route: string, data: unknown, options?: EnqueueOptions): Promise<string> {
     if(!createQueueOptions.apiKey && !options?.apiKey) throw new Error("API key must always be set");
@@ -43,7 +43,7 @@ export default function (createQueueOptions: CreateEnqueueOptions)
       method: 'post',
       headers: {
         'content-type': 'application/json',
-        'x-fqapi-key': options?.apiKey || createQueueOptions.apiKey
+        'x-fq-api-key': options?.apiKey || createQueueOptions.apiKey
       },
       body: JSON.stringify({
           action: route,
