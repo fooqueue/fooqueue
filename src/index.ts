@@ -10,7 +10,7 @@ type CreateEnqueueOptions = {
  * @param {CreateEnqueueOptions} options Optional configuration information. Either devMode must be set to true or apiKey and endpoint must be configured.
  */
 export default function (createQueueOptions: CreateEnqueueOptions)
-: (endpoint: string, data: unknown, options: EnqueueOptions | undefined) => Promise<string> {
+: (endpoint: string, data: unknown, options?: EnqueueOptions | undefined) => Promise<string> {
   if(!createQueueOptions.apiKey) throw new Error("API key must be set");
   if(!createQueueOptions.endpoint) console.warn("Fooqueue Server endpoint must be set");
   
