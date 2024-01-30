@@ -1,5 +1,5 @@
 import type {Request, Response, NextFunction} from 'express';
-import {type CacheInterface} from '../utils/cache';
+import {type CacheInterface} from '../utils/cache.js';
 
 type Body = {
   status?: string | null,

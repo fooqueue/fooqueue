@@ -1,4 +1,4 @@
-import type {EnqueueOptions} from './client/types/EnqueueOptions';
+import type {EnqueueOptions} from './client/types/EnqueueOptions.js';
 export type {EnqueueOptions as EnqueueOptions};
 export type {CreateEnqueueOptions as CreateQueueOptions};
 
@@ -6,11 +6,17 @@ type CreateEnqueueOptions = {
   apiKey: string,
   endpoint: string,
 }
+
+type QueueFunction = (endpoint: string, data: unknown, options?: EnqueueOptions) => Promise<string>;
+type UpdateFunction = (id: string, progress?: number, status?: StatusOptions, data?: unknown) => Promise<void>;
+type InitializationReturn = {queue: QueueFunction, update: UpdateFunction}
+type StatusOptions = 'initializing' | 'started' | 'processing' | 'finalizing' | 'complete' | string;
+
 /**
  * @param {CreateEnqueueOptions} options Optional configuration information. Either devMode must be set to true or apiKey and endpoint must be configured.
  */
 export default function (createQueueOptions: CreateEnqueueOptions)
-: (endpoint: string, data: unknown, options?: EnqueueOptions | undefined) => Promise<string> {
+: InitializationReturn {
   if(!createQueueOptions.apiKey) throw new Error("API key must be set");
   if(!createQueueOptions.endpoint) console.warn("Fooqueue Server endpoint must be set");
   
@@ -19,7 +25,8 @@ export default function (createQueueOptions: CreateEnqueueOptions)
   * @param {any} data The data that will be posted to {endpoint}
   * @param {EnqueueOptions | undefined} options Optional configuration information
   */
-  return async function (route: string, data: unknown, options?: EnqueueOptions): Promise<string> {
+  return {
+    queue: async function (route: string, data: unknown, options?: EnqueueOptions): Promise<string> {
     if(!createQueueOptions.apiKey && !options?.apiKey) throw new Error("API key must always be set");
     if(!createQueueOptions.endpoint && !options?.endpoint) throw new Error("Fooqueue server URL must always be set");
 
@@ -52,5 +59,25 @@ export default function (createQueueOptions: CreateEnqueueOptions)
       });
     const json = await response.json();
     return json.id;
+    }, 
+    update: async (id: string, progress?: number, status?: StatusOptions, data?: unknown, options?: EnqueueOptions) => {
+      if(!createQueueOptions.apiKey && !options?.apiKey) throw new Error("API key must always be set");
+      if(!createQueueOptions.endpoint && !options?.endpoint) throw new Error("Fooqueue server URL must always be set");
+      const priority_endpoint = options?.endpoint || createQueueOptions.endpoint;
+      const base_url = new URL(priority_endpoint+`/job/${id}/status`);
+
+      await fetch(base_url.toString(), {
+        method: 'put',
+        headers: {
+          'content-type': 'application/json',
+          'x-fq-api-key': options?.apiKey || createQueueOptions.apiKey
+        },
+        body: JSON.stringify({
+            progress: progress,
+            status: status,
+            data: data
+        })
+      });
+    }
   };
 }

@@ -2,9 +2,9 @@ import type {Request, Response, NextFunction} from 'express';
 import type { Queue } from 'bullmq';
 
 import { randomUUID } from 'crypto';
-import { CacheInterface } from '../utils/cache';
+import { CacheInterface } from '../utils/cache.js';
 
-import {type LogInterface} from '../utils/log';
+import {type LogInterface} from '../utils/log.js';
 
 
 type PostJobConfig = {

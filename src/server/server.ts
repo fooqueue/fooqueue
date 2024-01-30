@@ -1,17 +1,17 @@
 import express, { Application } from "express";
 import type {Request, Response} from 'express';
 
-import auth from './lib/handlers/auth';
-import put_status from './lib/handlers/put_status';
-import get_status from './lib/handlers/get_status';
-import post_job from './lib/handlers/post_job';
+import auth from './lib/handlers/auth.js';
+import put_status from './lib/handlers/put_status.js';
+import get_status from './lib/handlers/get_status.js';
+import post_job from './lib/handlers/post_job.js';
 
-import worker from './lib/worker';
+import worker from './lib/worker.js';
 
-import RedisClient from "./lib/utils/redis";
-import Cache from './lib/utils/cache';
-import Log from './lib/utils/log';
-import Queue from "./lib/utils/queue";
+import RedisClient from "./lib/utils/redis.js";
+import Cache from './lib/utils/cache.js';
+import Log from './lib/utils/log.js';
+import Queue from "./lib/utils/queue.js";
 
 export default function (
   API_KEY: string | null,

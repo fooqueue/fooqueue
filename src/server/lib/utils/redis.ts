@@ -1,5 +1,5 @@
 import {Redis} from 'ioredis';
-import type { LogInterface } from './log';
+import type { LogInterface } from './log.js';
 
 export default function (REDIS_URL: string, log: LogInterface) {
   if(!REDIS_URL) throw Error('Redis URL is required to connect to redis.');

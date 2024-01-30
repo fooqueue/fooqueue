@@ -1,5 +1,5 @@
 import type {Redis} from 'ioredis';
-import {type LogInterface } from './log';
+import {type LogInterface } from './log.js';
 
 export type CacheConfig = {
   CACHE_PREFIX: string,

@@ -1,11 +1,15 @@
 #!/usr/bin/env node
-const yargs = require('yargs/yargs')
-const { hideBin } = require('yargs/helpers')
+
+import yargs from 'yargs/yargs';
+import { hideBin } from 'yargs/helpers';
+
 const argv = yargs(hideBin(process.argv)).argv
-const app = require("./lib/server/server.js");
-const fs = require('fs');
-const crypto = require('crypto');
-const path = require('path');
+import app from './lib/server/server.js';
+
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+import path from 'node:path';
+
 
 function ensureDirectoryExistence(filePath) {
   var dirname = path.dirname(filePath);
@@ -34,9 +38,9 @@ try {
   }
 }
 
+import {env} from 'node:process';
 
-const env = require('node:process').env;
-app.default(
+app(
   argv.apiKey || argv.key || argv.api || env.FQ_API_KEY || API_KEY,
   argv.endpoint || argv.e || env.FQ_ENDPOINT || 'http://localhost:5173',
   argv.queueName || argv.q || env.QUEUE_NAME || 'fq:jobs',

@@ -1,4 +1,4 @@
-import app from './server';
+import app from './server.js';
 
 //TODO: Set environment varibles.
 import {env} from 'node:process';

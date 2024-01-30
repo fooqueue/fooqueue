@@ -1,4 +1,4 @@
-import type {Cookies} from './Cookies';
+import type {Cookies} from './Cookies.js';
 
 export interface RequestEvent<
 	Params extends Partial<Record<string, string>> = Partial<Record<string, string>>,

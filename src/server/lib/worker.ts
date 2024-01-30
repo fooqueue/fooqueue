@@ -1,9 +1,9 @@
 import { Worker, Job, type RedisClient } from 'bullmq';
 
-import type {CacheInterface} from './utils/cache';
+import type {CacheInterface} from './utils/cache.js';
 
 import {env} from 'node:process';
-import type { LogInterface } from './utils/log';
+import type { LogInterface } from './utils/log.js';
 
 const KEEP_COMPLETE_AGE: number = Number(env.KEEP_COMPLETE_AGE) || 3600; //1 hour
 const KEEP_FAIL_AGE: number = Number(env.KEEP_FAIL_AGE) || 24 * 3600; //24 hours
