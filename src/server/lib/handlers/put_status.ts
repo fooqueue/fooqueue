@@ -46,7 +46,6 @@ export default function (cache: CacheInterface) {
     try {
       const body = validate_body(req.body);
       const uuid = req.params.uuid;
-      
       const status = await cache.get(uuid);
       if(!status) return;
       const new_status = merge_status(status, body);

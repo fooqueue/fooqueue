@@ -1,5 +1,6 @@
 import express, { Application } from "express";
 import type {Request, Response} from 'express';
+import cors from 'cors';
 
 import auth from './lib/handlers/auth.js';
 import put_status from './lib/handlers/put_status.js';
@@ -55,7 +56,7 @@ export default function (
   .use(express.json(), (req, res, next) => {
     return next();
   })
-  .get('/job/:uuid/status', get_status(cache)) //unprotected route
+  .get('/job/:uuid/status', cors(), get_status(cache)) //unprotected route
   .use(auth(API_KEY)) //protect all following routes
   .post('/job', express.json(), post_job(queue, cache, log, {
     LOW_PRIORITY, DEFAULT_PRIORITY, HIGH_PRIORITY
