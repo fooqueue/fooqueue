@@ -3,12 +3,14 @@ services:
   - type: web
     name: webdis
     runtime: Node,
-    
+
     repo: https://github.com/fooqueue/fooqueue.git # optional
     region: oregon # optional (defaults to oregon)
     plan: standard # optional (defaults to starter instance type)
     branch: main # optional (defaults to master)
     autoDeploy: false
+    buildCommand: npm run build:server
+    startCommand: npm start
     envVars:
       - key: QUEUE_NAME
         value: fq:jobs
