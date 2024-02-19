@@ -2,7 +2,7 @@ services:
   # A Node web service
   - type: web
     name: webdis
-    runtime: Node,
+    runtime: node
 
     repo: https://github.com/fooqueue/fooqueue.git # optional
     region: oregon # optional (defaults to oregon)
