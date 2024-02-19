@@ -6,7 +6,7 @@ services:
 
     repo: https://github.com/fooqueue/fooqueue.git # optional
     region: oregon # optional (defaults to oregon)
-    plan: starter # optional (defaults to starter instance type)
+    plan: free # optional (defaults to starter instance type)
     branch: main # optional (defaults to master)
     autoDeploy: false
     buildCommand: npm run build:server
