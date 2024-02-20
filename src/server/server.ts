@@ -49,7 +49,7 @@ export default function (
     `);
     console.log(`❗️ If you see this message in production you're doing something wrong. Please check the documentation. ❗️`);
   } else {
-    console.log(`✅ Launching Fooqueue Server in PRODUCTION mode for app located at ${ENDPOINT}`);
+    console.log(`✅ Launching Fooqueue Server in PRODUCTION mode on port ${PORT} for app located at ${ENDPOINT}`);
   }
 
   app
@@ -69,9 +69,10 @@ export default function (
     log.error(err.stack || 'Unknown error');
     res.status(500).json({error: err.message});
   })
-  .listen(PORT, "localhost", async function () {
+  .listen(PORT, async function () {
     await new Promise(r => setTimeout(r, 1000)); //get redis time to connect
     log.debug(`Server is running on port ${PORT}.`);
+    console.log(`✅ Server is running in ${DEV_MODE ? "development" : "production"} mode on port ${PORT}.`);
     worker(QUEUE_NAME, ENDPOINT, API_KEY, redis, cache, log);
   })
   .on("error", (err: {code?: string, message?: string}) => {

@@ -14,7 +14,7 @@ services:
     envVars:
       - key: QUEUE_NAME
         value: fq:jobs
-      - key: FQ_ENDPOINT
+      - key: FQ_APP_ENDPOINT
         sync: false
       - key: FQ_API_KEY
         generateValue: true
