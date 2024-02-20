@@ -8,7 +8,7 @@
   "exports": "./lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "rm -rf ./lib && npm run build:server && parcel build",
+    "build": "npm install && rm -rf ./lib && npm run build:server",
     "build:client": "parcel build",
     "watch": "parcel watch",
     "build:server": "tsc",

@@ -9,7 +9,7 @@ services:
     plan: free # optional (defaults to starter instance type)
     branch: main # optional (defaults to master)
     autoDeploy: false
-    buildCommand: npm run build:server
+    buildCommand: npm run build
     startCommand: npm start
     envVars:
       - key: QUEUE_NAME
